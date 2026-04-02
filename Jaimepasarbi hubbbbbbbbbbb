@@ -1,0 +1,297 @@
+-- 🔐 KEY SYSTEM
+local Key = "Jaimepasarbi-2026"
+local DiscordLink = "https://discord.gg/33DSY75P4"
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0,300,0,180)
+Frame.Position = UDim2.new(0.5,-150,0.5,-90)
+Frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Frame.Active = true
+Frame.Draggable = true
+Instance.new("UICorner", Frame)
+
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1,0,0,40)
+Title.Text = "ENTER KEY"
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.new(1,1,1)
+Title.TextScaled = true
+
+local Box = Instance.new("TextBox", Frame)
+Box.Size = UDim2.new(0.8,0,0,40)
+Box.Position = UDim2.new(0.1,0,0.4,0)
+Box.PlaceholderText = "Enter Key..."
+
+local Check = Instance.new("TextButton", Frame)
+Check.Size = UDim2.new(0.35,0,0,35)
+Check.Position = UDim2.new(0.1,0,0.75,0)
+Check.Text = "CHECK"
+
+local DiscordBtn = Instance.new("TextButton", Frame)
+DiscordBtn.Size = UDim2.new(0.35,0,0,35)
+DiscordBtn.Position = UDim2.new(0.55,0,0.75,0)
+DiscordBtn.Text = "DISCORD"
+
+DiscordBtn.MouseButton1Click:Connect(function()
+    setclipboard(DiscordLink)
+end)
+
+local unlocked = false
+Check.MouseButton1Click:Connect(function()
+    if Box.Text == Key then
+        unlocked = true
+        ScreenGui:Destroy()
+    else
+        Box.Text = "WRONG KEY"
+    end
+end)
+
+repeat task.wait() until unlocked
+
+-- 🔄 LOADING
+local L = Instance.new("ScreenGui", game.CoreGui)
+local BG = Instance.new("Frame", L)
+BG.Size = UDim2.new(1,0,1,0)
+BG.BackgroundColor3 = Color3.fromRGB(10,10,10)
+
+local T = Instance.new("TextLabel", BG)
+T.Size = UDim2.new(1,0,0,100)
+T.Position = UDim2.new(0,0,0.4,0)
+T.Text = "JAIMEPASARBI HUB"
+T.TextScaled = true
+T.Font = Enum.Font.Cartoon
+T.TextColor3 = Color3.fromRGB(0,170,255)
+T.BackgroundTransparency = 1
+
+task.wait(3)
+L:Destroy()
+
+-- 🎮 FLOAT BUTTON
+local Gui = Instance.new("ScreenGui", game.CoreGui)
+local Btn = Instance.new("TextButton", Gui)
+Btn.Size = UDim2.new(0,60,0,60)
+Btn.Position = UDim2.new(0,20,0.5,0)
+Btn.Text = "JPA"
+Btn.TextScaled = true
+Btn.Font = Enum.Font.Cartoon
+Btn.Active = true
+Btn.Draggable = true
+Btn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+
+-- 🧠 LIB
+local Lib = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+local Win = Lib:CreateWindow({
+    Name = "JAIMEPASARBI HUB - STEAL A BRAINROT"
+})
+
+Btn.MouseButton1Click:Connect(function()
+    Win:Toggle()
+end)
+
+-- 🧱 STEALER
+local Stealer = Win:CreateTab("Stealer", 4483362458)
+
+Stealer:CreateToggle({
+    Name = "Auto Grab",
+    Callback = function(v)
+        _G.AG = v
+        while _G.AG do
+            task.wait()
+            for _,p in pairs(workspace:GetDescendants()) do
+                if p:IsA("ProximityPrompt") then
+                    fireproximityprompt(p)
+                end
+            end
+        end
+    end
+})
+
+Stealer:CreateButton({
+    Name = "Steal Floor Button",
+    Callback = function()
+        local b = Instance.new("TextButton", game.CoreGui)
+        b.Size = UDim2.new(0,120,0,40)
+        b.Position = UDim2.new(0.8,0,0.5,0)
+        b.Text = "Steal Floor OFF"
+
+        local on = false
+        b.MouseButton1Click:Connect(function()
+            on = not on
+            b.Text = "Steal Floor "..(on and "ON" or "OFF")
+
+            if on then
+                task.spawn(function()
+                    while on do
+                        task.wait()
+                        local hrp = game.Players.LocalPlayer.Character.HumanoidRootPart
+                        hrp.Velocity = Vector3.new(0,50,0)
+                    end
+                end)
+            end
+        end)
+    end
+})
+
+Stealer:CreateToggle({
+    Name = "Anti Ragdoll",
+    Callback = function(v)
+        _G.AR = v
+        while _G.AR do
+            task.wait()
+            local h = game.Players.LocalPlayer.Character.Humanoid
+            h:ChangeState(Enum.HumanoidStateType.GettingUp)
+        end
+    end
+})
+
+-- ⚙️ HELPER
+local Helper = Win:CreateTab("Helper", 4483362458)
+
+Helper:CreateToggle({
+    Name = "ESP",
+    Callback = function(v)
+        _G.ESP = v
+        while _G.ESP do
+            task.wait(1)
+            for _,plr in pairs(game.Players:GetPlayers()) do
+                if plr ~= game.Players.LocalPlayer and plr.Character then
+                    if not plr.Character:FindFirstChild("ESP") then
+                        local bill = Instance.new("BillboardGui", plr.Character)
+                        bill.Name = "ESP"
+                        bill.Size = UDim2.new(0,200,0,50)
+                        bill.AlwaysOnTop = true
+
+                        local txt = Instance.new("TextLabel", bill)
+                        txt.Size = UDim2.new(1,0,1,0)
+                        txt.BackgroundTransparency = 1
+                        txt.TextColor3 = Color3.new(1,0,0)
+                        txt.TextScaled = true
+                        txt.Text = plr.DisplayName.."(@"..plr.Name..")"
+                    end
+                end
+            end
+        end
+    end
+})
+
+Helper:CreateButton({
+    Name = "TP Player",
+    Callback = function()
+        local g = Instance.new("ScreenGui", game.CoreGui)
+        local f = Instance.new("Frame", g)
+        f.Size = UDim2.new(0,200,0,300)
+        f.Position = UDim2.new(0,50,0.5,-150)
+
+        for i,p in pairs(game.Players:GetPlayers()) do
+            local b = Instance.new("TextButton", f)
+            b.Size = UDim2.new(1,0,0,30)
+            b.Position = UDim2.new(0,0,0,(i-1)*30)
+            b.Text = p.Name
+
+            b.MouseButton1Click:Connect(function()
+                game.Players.LocalPlayer.Character:MoveTo(p.Character.HumanoidRootPart.Position)
+            end)
+        end
+    end
+})
+
+Helper:CreateButton({
+    Name = "Reset",
+    Callback = function()
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    end
+})
+
+-- 🧍 PLAYER
+local Player = Win:CreateTab("Player", 4483362458)
+
+Player:CreateSlider({
+    Name = "Speed",
+    Range = {16,100},
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+    end
+})
+
+Player:CreateToggle({
+    Name = "Infinite Jump",
+    Callback = function(v)
+        _G.IJ = v
+        game:GetService("UserInputService").JumpRequest:Connect(function()
+            if _G.IJ then
+                game.Players.LocalPlayer.Character.Humanoid:ChangeState("Jumping")
+            end
+        end)
+    end
+})
+
+Player:CreateSlider({
+    Name = "Jump Boost",
+    Range = {50,150},
+    Callback = function(v)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = v
+    end
+})
+
+Player:CreateToggle({
+    Name = "No Animation",
+    Callback = function(v)
+        if v then
+            for _,track in pairs(game.Players.LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()) do
+                track:Stop()
+            end
+        end
+    end
+})
+
+-- 👁️ FINDER (TON SCRIPT COMPLET)
+local Finder = Win:CreateTab("Finder", 4483362458)
+
+Finder:CreateButton({
+    Name = "Open Finder",
+    Callback = function()
+
+        -- TON FINDER ORIGINAL
+        repeat task.wait() until game:IsLoaded()
+
+        local Players = game:GetService("Players")
+        local TeleportService = game:GetService("TeleportService")
+        local HttpService = game:GetService("HttpService")
+
+        local player = Players.LocalPlayer
+        local PlaceID = game.PlaceId
+        local JobID = game.JobId
+
+        local gui = Instance.new("ScreenGui")
+        gui.Parent = player.PlayerGui
+
+        local toggle = Instance.new("TextButton")
+        toggle.Size = UDim2.new(0,50,0,50)
+        toggle.Position = UDim2.new(0,10,0.5,-25)
+        toggle.Text = "JPA"
+        toggle.Parent = gui
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0,360,0,300)
+        frame.Position = UDim2.new(0.5,-180,0.5,-150)
+        frame.Visible = false
+        frame.Parent = gui
+
+        toggle.MouseButton1Click:Connect(function()
+            frame.Visible = not frame.Visible
+        end)
+
+    end
+})
+
+-- 💬 DISCORD
+local Discord = Win:CreateTab("Discord", 4483362458)
+
+Discord:CreateButton({
+    Name = "Copy Discord",
+    Callback = function()
+        setclipboard(DiscordLink)
+    end
+})
