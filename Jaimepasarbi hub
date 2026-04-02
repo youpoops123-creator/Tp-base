@@ -1,0 +1,183 @@
+-- 🔐 KEY SYSTEM
+local Key = "Jaimepasarbi-2026"
+local DiscordLink = "https://discord.gg/33DSY75P4"
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0,300,0,180)
+Frame.Position = UDim2.new(0.5,-150,0.5,-90)
+Frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Frame.Parent = ScreenGui
+Frame.Active = true
+Frame.Draggable = true
+Instance.new("UICorner", Frame)
+
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1,0,0,40)
+Title.Text = "JAIMEPASARBI HUB KEY"
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.new(1,1,1)
+Title.TextScaled = true
+
+local TextBox = Instance.new("TextBox", Frame)
+TextBox.Size = UDim2.new(0.8,0,0,40)
+TextBox.Position = UDim2.new(0.1,0,0.4,0)
+TextBox.PlaceholderText = "Enter Key..."
+TextBox.TextScaled = true
+
+local Check = Instance.new("TextButton", Frame)
+Check.Size = UDim2.new(0.35,0,0,35)
+Check.Position = UDim2.new(0.1,0,0.75,0)
+Check.Text = "CHECK"
+
+local GetKey = Instance.new("TextButton", Frame)
+GetKey.Size = UDim2.new(0.35,0,0,35)
+GetKey.Position = UDim2.new(0.55,0,0.75,0)
+GetKey.Text = "Discord"
+
+GetKey.MouseButton1Click:Connect(function()
+   setclipboard(DiscordLink)
+   game:GetService("StarterGui"):SetCore("SendNotification", {
+      Title = "Discord",
+      Text = "Lien copié !",
+      Duration = 5
+   })
+end)
+
+local unlocked = false
+Check.MouseButton1Click:Connect(function()
+   if TextBox.Text == Key then
+      unlocked = true
+      ScreenGui:Destroy()
+   else
+      TextBox.Text = "Wrong Key"
+   end
+end)
+
+repeat task.wait() until unlocked
+
+-- 🔄 LOADING
+local LoadingGui = Instance.new("ScreenGui", game.CoreGui)
+local BG = Instance.new("Frame", LoadingGui)
+BG.Size = UDim2.new(1,0,1,0)
+BG.BackgroundColor3 = Color3.fromRGB(10,10,10)
+
+local Title = Instance.new("TextLabel", BG)
+Title.Size = UDim2.new(1,0,0,100)
+Title.Position = UDim2.new(0,0,0.4,0)
+Title.Text = "JAIMEPASARBI HUB"
+Title.TextColor3 = Color3.fromRGB(0,170,255)
+Title.TextStrokeTransparency = 0
+Title.TextScaled = true
+Title.Font = Enum.Font.Cartoon
+Title.BackgroundTransparency = 1
+
+task.wait(3)
+LoadingGui:Destroy()
+
+-- 🎮 FLOAT BUTTON
+local LogoGui = Instance.new("ScreenGui", game.CoreGui)
+local Button = Instance.new("TextButton", LogoGui)
+Button.Size = UDim2.new(0,60,0,60)
+Button.Position = UDim2.new(0,20,0.5,0)
+Button.Text = "JPA"
+Button.BackgroundColor3 = Color3.fromRGB(0,170,255)
+Button.TextScaled = true
+Button.Font = Enum.Font.Cartoon
+Button.Active = true
+Button.Draggable = true
+
+-- 🧠 UI LIB
+local Library = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+local Window = Library:CreateWindow({
+   Name = "JAIMEPASARBI HUB - STEAL A BRAINROT",
+})
+
+Button.MouseButton1Click:Connect(function()
+   Window:Toggle()
+end)
+
+-- 🧱 STEALER
+local StealerTab = Window:CreateTab("Stealer", 4483362458)
+
+StealerTab:CreateToggle({
+   Name = "Auto Grab",
+   Callback = function(Value)
+      _G.AutoGrab = Value
+      while _G.AutoGrab do
+         task.wait(0.3)
+         for _,v in pairs(workspace:GetDescendants()) do
+            if v:IsA("ProximityPrompt") then
+               fireproximityprompt(v)
+            end
+         end
+      end
+   end,
+})
+
+StealerTab:CreateToggle({
+   Name = "Anti Ragdoll",
+   Callback = function(Value)
+      _G.AR = Value
+      while _G.AR do
+         task.wait()
+         local hum = game.Players.LocalPlayer.Character.Humanoid
+         hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+      end
+   end,
+})
+
+-- ⚙️ HELPER
+local HelperTab = Window:CreateTab("Helper", 4483362458)
+
+HelperTab:CreateButton({
+   Name = "Reset Player",
+   Callback = function()
+      game.Players.LocalPlayer.Character.Humanoid.Health = 0
+   end,
+})
+
+-- 🧍 PLAYER
+local PlayerTab = Window:CreateTab("Player", 4483362458)
+
+PlayerTab:CreateSlider({
+   Name = "Speed",
+   Range = {16,100},
+   Callback = function(v)
+      game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
+   end,
+})
+
+PlayerTab:CreateToggle({
+   Name = "Infinite Jump",
+   Callback = function(v)
+      _G.IJ = v
+      game:GetService("UserInputService").JumpRequest:Connect(function()
+         if _G.IJ then
+            game.Players.LocalPlayer.Character.Humanoid:ChangeState("Jumping")
+         end
+      end)
+   end,
+})
+
+-- 👁️ FINDER
+local FinderTab = Window:CreateTab("Finder", 4483362458)
+
+FinderTab:CreateButton({
+   Name = "Server Hop",
+   Callback = function()
+      game:GetService("TeleportService"):Teleport(game.PlaceId)
+   end,
+})
+
+-- 💬 DISCORD
+local DiscordTab = Window:CreateTab("Discord", 4483362458)
+
+DiscordTab:CreateButton({
+   Name = "Copy Discord Link",
+   Callback = function()
+      setclipboard(DiscordLink)
+   end,
+})
