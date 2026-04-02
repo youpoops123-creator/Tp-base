@@ -1,0 +1,301 @@
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+
+local player = Players.LocalPlayer
+local PlaceID = game.PlaceId
+local JobID = game.JobId
+
+-- GUI
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.ResetOnSpawn = false
+
+-- JPA BUTTON
+local toggle = Instance.new("TextButton", gui)
+toggle.Size = UDim2.new(0,50,0,50)
+toggle.Position = UDim2.new(0,10,0.5,-25)
+toggle.Text = "JPA"
+toggle.BackgroundColor3 = Color3.fromRGB(180,0,0)
+toggle.TextScaled = true
+toggle.Font = Enum.Font.Cartoon
+
+-- MAIN FRAME
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,450,0,350)
+frame.Position = UDim2.new(0.5,-225,0.5,-175)
+frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+frame.Visible = false
+frame.Active = true
+frame.Draggable = true
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0,15)
+local stroke = Instance.new("UIStroke", frame)
+stroke.Color = Color3.fromRGB(255,0,0)
+
+toggle.MouseButton1Click:Connect(function()
+    frame.Visible = not frame.Visible
+end)
+
+-- TITLE
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1,0,0,40)
+title.Text = "JAIMEPASARBI HUB"
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255,255,255)
+title.TextScaled = true
+title.Font = Enum.Font.Cartoon
+
+-- TAB SYSTEM
+local tabs = {}
+
+local function createTab(name, posX)
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(0.3,0,0,30)
+    btn.Position = UDim2.new(posX,0,0.12,0)
+    btn.Text = name
+    btn.BackgroundColor3 = Color3.fromRGB(150,0,0)
+    btn.TextScaled = true
+    btn.Font = Enum.Font.Cartoon
+    Instance.new("UICorner", btn)
+
+    local tabFrame = Instance.new("Frame", frame)
+    tabFrame.Size = UDim2.new(1,0,0.7,0)
+    tabFrame.Position = UDim2.new(0,0,0.22,0)
+    tabFrame.BackgroundTransparency = 1
+    tabFrame.Visible = false
+
+    btn.MouseButton1Click:Connect(function()
+        for _,t in pairs(tabs) do
+            t.Visible = false
+        end
+        tabFrame.Visible = true
+    end)
+
+    table.insert(tabs, tabFrame)
+    return tabFrame
+end
+
+local mainTab = createTab("MAIN", 0)
+local playerTab = createTab("PLAYER", 0.33)
+local finderTab = createTab("FINDER", 0.66)
+
+tabs[1].Visible = true
+
+-- BUTTON CREATOR
+local function createButton(parent, text, y, func)
+    local btn = Instance.new("TextButton", parent)
+    btn.Size = UDim2.new(0.8,0,0,35)
+    btn.Position = UDim2.new(0.1,0,y,0)
+    btn.Text = text
+    btn.BackgroundColor3 = Color3.fromRGB(180,0,0)
+    btn.TextScaled = true
+    btn.Font = Enum.Font.Cartoon
+    Instance.new("UICorner", btn)
+    btn.MouseButton1Click:Connect(func)
+end
+
+-- SERVER HOP
+local autoHop = false
+
+local function hop()
+    local data = HttpService:JSONDecode(game:HttpGet(
+        "https://games.roblox.com/v1/games/"..PlaceID.."/servers/Public?sortOrder=Desc&limit=100"
+    ))
+
+    for _,s in pairs(data.data) do
+        if s.id ~= JobID and s.playing >= s.maxPlayers - 2 then
+            TeleportService:TeleportToPlaceInstance(PlaceID, s.id, player)
+            break
+        end
+    end
+end
+
+task.spawn(function()
+    while true do
+        if autoHop then hop() end
+        task.wait(10)
+    end
+end)
+
+-- ESP
+local espOn = false
+local espObjs = {}
+
+local function toggleESP()
+    espOn = not espOn
+
+    for _,v in pairs(espObjs) do
+        if v then v:Destroy() end
+    end
+    espObjs = {}
+
+    if espOn then
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr ~= player and plr.Character then
+                local head = plr.Character:FindFirstChild("Head")
+                if head then
+                    local bill = Instance.new("BillboardGui", head)
+                    bill.Size = UDim2.new(0,200,0,50)
+                    bill.AlwaysOnTop = true
+
+                    local txt = Instance.new("TextLabel", bill)
+                    txt.Size = UDim2.new(1,0,1,0)
+                    txt.BackgroundTransparency = 1
+                    txt.Text = plr.DisplayName.." (@"..plr.Name..")"
+                    txt.TextColor3 = Color3.fromRGB(255,0,0)
+                    txt.TextScaled = true
+                    txt.Font = Enum.Font.Cartoon
+
+                    espObjs[plr] = bill
+                end
+            end
+        end
+    end
+end
+
+-- TP MENU
+local tpFrame = Instance.new("Frame", gui)
+tpFrame.Size = UDim2.new(0,250,0,300)
+tpFrame.Position = UDim2.new(1,-260,0.5,-150)
+tpFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+tpFrame.Visible = false
+Instance.new("UICorner", tpFrame)
+
+local function refreshTP()
+    tpFrame:ClearAllChildren()
+
+    for i,plr in pairs(Players:GetPlayers()) do
+        if plr ~= player then
+            local btn = Instance.new("TextButton", tpFrame)
+            btn.Size = UDim2.new(1,0,0,30)
+            btn.Position = UDim2.new(0,0,0,(i-1)*32)
+            btn.Text = plr.DisplayName.." (@"..plr.Name..")"
+            btn.BackgroundColor3 = Color3.fromRGB(150,0,0)
+            btn.TextScaled = true
+            btn.Font = Enum.Font.Cartoon
+
+            btn.MouseButton1Click:Connect(function()
+                if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    player.Character:MoveTo(plr.Character.HumanoidRootPart.Position)
+                end
+            end)
+        end
+    end
+end
+
+-- SPEED UI
+local speedFrame = Instance.new("Frame", gui)
+speedFrame.Size = UDim2.new(0,200,0,220)
+speedFrame.Position = UDim2.new(1,-220,0.5,20)
+speedFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+speedFrame.Visible = false
+Instance.new("UICorner", speedFrame)
+
+local stroke2 = Instance.new("UIStroke", speedFrame)
+stroke2.Color = Color3.fromRGB(255,0,0)
+
+local title2 = Instance.new("TextLabel", speedFrame)
+title2.Size = UDim2.new(1,0,0,30)
+title2.Text = "SPEED BOOST"
+title2.BackgroundTransparency = 1
+title2.TextColor3 = Color3.fromRGB(255,255,255)
+title2.TextScaled = true
+title2.Font = Enum.Font.Cartoon
+
+local function setSpeed(v)
+    local char = player.Character
+    if char and char:FindFirstChild("Humanoid") then
+        char.Humanoid.WalkSpeed = v
+    end
+end
+
+local function speedBtn(text, y, val)
+    local btn = Instance.new("TextButton", speedFrame)
+    btn.Size = UDim2.new(0.8,0,0,30)
+    btn.Position = UDim2.new(0.1,0,y,0)
+    btn.Text = text
+    btn.BackgroundColor3 = Color3.fromRGB(150,0,0)
+    btn.TextScaled = true
+    btn.Font = Enum.Font.Cartoon
+    Instance.new("UICorner", btn)
+
+    btn.MouseButton1Click:Connect(function()
+        setSpeed(val)
+    end)
+end
+
+speedBtn("SPEED 25", 0.2, 25)
+speedBtn("SPEED 50", 0.4, 50)
+speedBtn("SPEED 75", 0.6, 75)
+speedBtn("SPEED 100", 0.8, 100)
+
+local reset = Instance.new("TextButton", speedFrame)
+reset.Size = UDim2.new(0.8,0,0,30)
+reset.Position = UDim2.new(0.1,0,1,-35)
+reset.Text = "RESET (16)"
+reset.BackgroundColor3 = Color3.fromRGB(100,0,0)
+reset.TextScaled = true
+reset.Font = Enum.Font.Cartoon
+reset.MouseButton1Click:Connect(function()
+    setSpeed(16)
+end)
+
+-- FINDER
+local finderFrame = Instance.new("Frame", finderTab)
+finderFrame.Size = UDim2.new(1,0,1,0)
+finderFrame.BackgroundTransparency = 1
+
+local brainrots = {
+    {"Nacho Spyder","50M"},
+    {"Spooky and Pumpky","80M"},
+    {"Ventoliero Pavonero","65M"},
+    {"Rosetti Tualetti","50M"},
+}
+
+local function createFinder()
+    finderFrame:ClearAllChildren()
+
+    for i=1,5 do
+        local data = brainrots[math.random(1,#brainrots)]
+        local playersCount = math.random(6,8)
+
+        local txt = Instance.new("TextLabel", finderFrame)
+        txt.Size = UDim2.new(0.6,0,0,30)
+        txt.Position = UDim2.new(0.05,0,0.1 + i*0.12,0)
+        txt.BackgroundTransparency = 1
+        txt.Text = "👥 "..playersCount.."/8 | "..data[1].." | 💰 "..data[2]
+        txt.TextColor3 = Color3.fromRGB(255,255,255)
+        txt.TextScaled = true
+        txt.Font = Enum.Font.Cartoon
+
+        local btn = Instance.new("TextButton", finderFrame)
+        btn.Size = UDim2.new(0.25,0,0,30)
+        btn.Position = UDim2.new(0.7,0,0.1 + i*0.12,0)
+        btn.Text = "JOIN"
+        btn.BackgroundColor3 = Color3.fromRGB(180,0,0)
+        btn.TextScaled = true
+        btn.Font = Enum.Font.Cartoon
+
+        btn.MouseButton1Click:Connect(hop)
+    end
+end
+
+createFinder()
+
+-- BUTTONS
+createButton(mainTab, "AUTO HOP", 0.1, function()
+    autoHop = not autoHop
+end)
+
+createButton(mainTab, "SPEED BOOST UI", 0.3, function()
+    speedFrame.Visible = not speedFrame.Visible
+end)
+
+createButton(playerTab, "ESP", 0.2, toggleESP)
+
+createButton(playerTab, "TP PLAYERS", 0.4, function()
+    tpFrame.Visible = not tpFrame.Visible
+    if tpFrame.Visible then refreshTP() end
+end)
