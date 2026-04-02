@@ -1,0 +1,46 @@
+local player = game.Players.LocalPlayer
+
+-- Création du GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Texte en haut
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(0, 200, 0, 50)
+title.Position = UDim2.new(0.5, -100, 0, 0)
+title.Text = "jaimepasarbi"
+title.TextScaled = true
+title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Parent = screenGui
+
+-- Bouton pour augmenter vitesse
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0.5, -100, 0.5, -25)
+button.Text = "Augmenter vitesse"
+button.Parent = screenGui
+
+-- Texte vitesse actuelle
+local speedText = Instance.new("TextLabel")
+speedText.Size = UDim2.new(0, 200, 0, 50)
+speedText.Position = UDim2.new(0.5, -100, 0.6, -25)
+speedText.Text = "Vitesse: 16"
+speedText.Parent = screenGui
+
+-- Vitesse de base
+local speed = 16
+
+button.MouseButton1Click:Connect(function()
+    if speed < 30 then
+        speed = speed + 2
+    end
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+    if humanoid then
+        humanoid.WalkSpeed = speed
+        speedText.Text = "Vitesse: " .. speed
+    end
+end)
