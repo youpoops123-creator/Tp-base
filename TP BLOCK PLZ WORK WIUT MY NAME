@@ -43,11 +43,11 @@ ScreenGui.ResetOnSpawn = false
 local Frame = Instance.new("Frame", ScreenGui)
 Frame.Size = UDim2.new(0, 160, 0, 220)  -- Very small for mobile
 Frame.Position = UDim2.new(0.5, -80, 0.5, -110)  -- Centered
-Frame.BackgroundColor3 = Color3.fromRGB(120,0,0)  -- Red
+Frame.BackgroundColor3 = Color3.fromRGB(120,0,0)  -- Blue
 Frame.Active = true
 Frame.Draggable = true
 Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 10)
-Instance.new("UIStroke", Frame).Color = Color3.fromRGB(255, 0, 0)  -- Red
+Instance.new("UIStroke", Frame).Color = Color3.fromRGB(255, 0, 0)  -- Blue
 
 -- Title
 local Title = Instance.new("TextLabel", Frame)
