@@ -1456,7 +1456,7 @@ local function populateTab(tab)
 		creditsText.Parent = scroll
 		creditsText.Size = UDim2.new(0.95,0,0,120)
 		creditsText.BackgroundTransparency = 1
-		creditsText.Text = 'Made By Zarii thanks to: Killerhub hehe\n\nVersion: 1.0\n\nJoin our Discord for updates!'
+		creditsText.Text = 'Made By Jaimepasarbi thanks to: Datfardcat hehe\n\nVersion: 1.0\n\nJoin our Discord for updates!'
 		creditsText.Font = Enum.Font.GothamBold
 		creditsText.TextSize = 16
 		creditsText.TextColor3 = COLOR_TEXT
@@ -1474,7 +1474,7 @@ local function populateTab(tab)
 		btnCorner.CornerRadius = UDim.new(0,10)
 		btnCorner.Parent = discordButton
 		discordButton.MouseButton1Click:Connect(function()
-			local link = 'https://discord.gg/r8pmNNCKt'
+			local link = 'https://https://discord.gg/2cEUD8AF3'
 			setclipboard(link)
 			print('Discord link copied to clipboard: '..link)
 			local copiedLabel = Instance.new('TextLabel')
