@@ -1,6 +1,6 @@
--- RagerHub Tp and Block Ultra
--- Created by: RagerHub Team
--- Discord: @ragerkan_84101
+-- JMP Tp and Block Ultra
+-- Created by: jaimepasarbi Team
+-- Discord: @jaimepasarbi.
 
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
