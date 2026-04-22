@@ -173,7 +173,7 @@ minimizeButton.Size = UDim2.new(0, 50, 0, 50)
 minimizeButton.Position = UDim2.new(1, -60, 0, 10)
 minimizeButton.BackgroundColor3 = COLOR_BG
 minimizeButton.BackgroundTransparency = 0.25
-minimizeButton.Text = 'KH'
+minimizeButton.Text = 'JMP'
 minimizeButton.Font = Enum.Font.GothamBold
 minimizeButton.TextSize = 20
 minimizeButton.TextColor3 = COLOR_TAB_ACTIVE
@@ -1474,7 +1474,7 @@ local function populateTab(tab)
 		btnCorner.CornerRadius = UDim.new(0,10)
 		btnCorner.Parent = discordButton
 		discordButton.MouseButton1Click:Connect(function()
-			local link = 'https://https://discord.gg/2cEUD8AF3'
+			local link = 'https://discord.gg/2cEUD8AF3'
 			setclipboard(link)
 			print('Discord link copied to clipboard: '..link)
 			local copiedLabel = Instance.new('TextLabel')
