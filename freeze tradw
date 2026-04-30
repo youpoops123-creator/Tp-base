@@ -1,0 +1,228 @@
+--// PREMIUM VISUAL GUI (NO FUNCTIONALITY)
+
+local tw = game:GetService("TweenService")
+
+local COLORS = {
+    BG    = Color3.fromRGB(6, 6, 6),
+    Frame = Color3.fromRGB(16, 16, 16),
+    Neon1 = Color3.fromRGB(255, 255, 255),
+    Neon2 = Color3.fromRGB(100, 100, 100),
+    Text  = Color3.fromRGB(235, 235, 235),
+    Dim   = Color3.fromRGB(110, 110, 110),
+    Green = Color3.fromRGB(80, 220, 120),
+}
+
+local function tween(o, p, t, style)
+    tw:Create(o, TweenInfo.new(t or 0.25, style or Enum.EasingStyle.Quint), p):Play()
+end
+
+local function corner(p, r)
+    local c = Instance.new("UICorner", p)
+    c.CornerRadius = UDim.new(0, r or 10)
+end
+
+local function stroke(p, color, thick)
+    local s = Instance.new("UIStroke", p)
+    s.Color = color or Color3.fromRGB(40, 40, 40)
+    s.Thickness = thick or 1.2
+    return s
+end
+
+-- GUI ROOT
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "PremiumUI_" .. math.random(1000, 9999)
+gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- MAIN FRAME
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 210, 0, 118)
+main.Position = UDim2.new(0.5, -105, 0.5, -59)
+main.BackgroundColor3 = COLORS.BG
+main.BackgroundTransparency = 0.02
+main.BorderSizePixel = 0
+main.Active = true
+main.Draggable = true
+main.ClipsDescendants = true
+corner(main, 14)
+
+-- Animated neon border
+local mainStroke = stroke(main, COLORS.Neon2, 1.5)
+local mainGrad = Instance.new("UIGradient", mainStroke)
+mainGrad.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0,    COLORS.Neon2),
+    ColorSequenceKeypoint.new(0.45, COLORS.Neon2),
+    ColorSequenceKeypoint.new(0.5,  COLORS.Neon1),
+    ColorSequenceKeypoint.new(0.55, COLORS.Neon2),
+    ColorSequenceKeypoint.new(1,    COLORS.Neon2),
+}
+task.spawn(function()
+    while main and main.Parent do
+        for i = -1, 1, 0.012 do
+            mainGrad.Offset = Vector2.new(i, 0)
+            task.wait()
+        end
+    end
+end)
+
+-- Subtle glass sheen
+local glass = Instance.new("Frame", main)
+glass.Size = UDim2.new(1, 0, 0.5, 0)
+glass.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+glass.BackgroundTransparency = 0.96
+glass.BorderSizePixel = 0
+glass.ZIndex = 1
+corner(glass, 14)
+
+-- Ambient floating particles
+for i = 1, 10 do
+    local dot = Instance.new("Frame", main)
+    dot.Size = UDim2.new(0, 1.5, 0, 1.5)
+    dot.Position = UDim2.new(math.random(), 0, math.random(), 0)
+    dot.BackgroundColor3 = COLORS.Neon1
+    dot.BackgroundTransparency = 0.72
+    dot.BorderSizePixel = 0
+    dot.ZIndex = 2
+    corner(dot, 50)
+    task.spawn(function()
+        while dot and dot.Parent do
+            local t = math.random(7, 13)
+            tween(dot, {Position = UDim2.new(math.random(), 0, math.random(), 0)}, t, Enum.EasingStyle.Sine)
+            task.wait(t)
+        end
+    end)
+end
+
+-- HEADER
+local header = Instance.new("Frame", main)
+header.Size = UDim2.new(1, 0, 0, 34)
+header.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+header.BorderSizePixel = 0
+header.ZIndex = 3
+corner(header, 14)
+stroke(header, Color3.fromRGB(26, 26, 26))
+
+-- Shimmer accent line under header
+local accentLine = Instance.new("Frame", header)
+accentLine.Size = UDim2.new(1, 0, 0, 1)
+accentLine.Position = UDim2.new(0, 0, 1, -1)
+accentLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+accentLine.BorderSizePixel = 0
+accentLine.ZIndex = 4
+local accentGrad = Instance.new("UIGradient", accentLine)
+accentGrad.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0,   Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(0.3, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(210, 210, 210)),
+    ColorSequenceKeypoint.new(0.7, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(1,   Color3.fromRGB(0, 0, 0)),
+}
+
+-- macOS-style traffic light dots in header
+for i = 1, 3 do
+    local dot = Instance.new("Frame", header)
+    dot.Size = UDim2.new(0, 6, 0, 6)
+    dot.Position = UDim2.new(0, 10 + (i - 1) * 14, 0.5, -3)
+    dot.BackgroundColor3 = i == 1 and Color3.fromRGB(235, 80, 80)
+                        or i == 2 and Color3.fromRGB(235, 185, 60)
+                        or            Color3.fromRGB(80, 200, 100)
+    dot.BorderSizePixel = 0
+    dot.ZIndex = 5
+    corner(dot, 50)
+end
+
+-- Close button
+local closeBtn = Instance.new("TextButton", header)
+closeBtn.Size = UDim2.new(0, 22, 0, 22)
+closeBtn.Position = UDim2.new(1, -27, 0.5, -11)
+closeBtn.Text = "✕"
+closeBtn.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+closeBtn.TextColor3 = COLORS.Dim
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 11
+closeBtn.BorderSizePixel = 0
+closeBtn.AutoButtonColor = false
+closeBtn.ZIndex = 5
+corner(closeBtn, 6)
+stroke(closeBtn, Color3.fromRGB(44, 44, 44))
+
+closeBtn.MouseEnter:Connect(function() tween(closeBtn, {BackgroundColor3 = Color3.fromRGB(170, 30, 30)}, 0.15) end)
+closeBtn.MouseLeave:Connect(function() tween(closeBtn, {BackgroundColor3 = Color3.fromRGB(26, 26, 26)}, 0.15) end)
+closeBtn.MouseButton1Click:Connect(function()
+    tween(main, {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}, 0.3, Enum.EasingStyle.Quint)
+    task.wait(0.32)
+    gui:Destroy()
+end)
+
+-- FAKE TOGGLE BUILDER
+local function fakeToggle(posY, text)
+    local f = Instance.new("Frame", main)
+    f.Size = UDim2.new(1, -12, 0, 30)
+    f.Position = UDim2.new(0, 6, 0, posY)
+    f.BackgroundColor3 = COLORS.Frame
+    f.BorderSizePixel = 0
+    f.ZIndex = 4
+    corner(f, 9)
+    stroke(f, Color3.fromRGB(28, 28, 28))
+
+    local fg = Instance.new("UIGradient", f)
+    fg.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(22, 22, 22)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(13, 13, 13)),
+    }
+    fg.Rotation = 90
+
+    local lbl = Instance.new("TextLabel", f)
+    lbl.Size = UDim2.new(1, -52, 1, 0)
+    lbl.Position = UDim2.new(0, 10, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = text
+    lbl.Font = Enum.Font.Gotham
+    lbl.TextSize = 10
+    lbl.TextColor3 = COLORS.Text
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.ZIndex = 5
+
+    local track = Instance.new("TextButton", f)
+    track.Size = UDim2.new(0, 36, 0, 17)
+    track.Position = UDim2.new(1, -42, 0.5, -8.5)
+    track.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    track.Text = ""
+    track.BorderSizePixel = 0
+    track.AutoButtonColor = false
+    track.ZIndex = 5
+    corner(track, 9)
+    stroke(track, Color3.fromRGB(38, 38, 38))
+
+    local knob = Instance.new("Frame", track)
+    knob.Size = UDim2.new(0, 13, 0, 13)
+    knob.Position = UDim2.new(0, 2, 0.5, -6.5)
+    knob.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    knob.BorderSizePixel = 0
+    knob.ZIndex = 6
+    corner(knob, 7)
+    stroke(knob, Color3.fromRGB(0, 0, 0), 1)
+
+    local on = false
+    track.MouseButton1Click:Connect(function()
+        on = not on
+        if on then
+            tween(track, {BackgroundColor3 = Color3.fromRGB(44, 44, 44)}, 0.2)
+            tween(knob, {Position = UDim2.new(0, 21, 0.5, -6.5), BackgroundColor3 = COLORS.Neon1}, 0.2, Enum.EasingStyle.Back)
+            tween(lbl, {TextColor3 = COLORS.Green}, 0.2)
+        else
+            tween(track, {BackgroundColor3 = Color3.fromRGB(24, 24, 24)}, 0.2)
+            tween(knob, {Position = UDim2.new(0, 2, 0.5, -6.5), BackgroundColor3 = Color3.fromRGB(70, 70, 70)}, 0.2, Enum.EasingStyle.Back)
+            tween(lbl, {TextColor3 = COLORS.Text}, 0.2)
+        end
+    end)
+end
+
+fakeToggle(38, "Freeze Trade")
+fakeToggle(72, "Auto Accept")
+
+-- Pop-in on load
+main.Size = UDim2.new(0, 0, 0, 0)
+main.Position = UDim2.new(0.5, 0, 0.5, 0)
+task.wait(0.15)
+tween(main, {Size = UDim2.new(0, 210, 0, 118), Position = UDim2.new(0.5, -105, 0.5, -59)}, 0.5, Enum.EasingStyle.Back)
