@@ -1,0 +1,187 @@
+Why Buy Lights? Just Buy Cxyro Hubs It's cheaper And Better https://discord.gg/cxyrohub
+
+
+
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+local CoreGui = game:GetService("CoreGui")
+
+-- ===== COLORS =====
+
+local COLORS = {
+
+    Pink = Color3.fromRGB(255, 105, 180),
+
+    Purple = Color3.fromRGB(138, 43, 226),
+
+    DarkPurple = Color3.fromRGB(45, 0, 80),
+
+    White = Color3.fromRGB(255, 255, 255),
+
+}
+
+-- ===== GUI SETUP =====
+
+local gui = Instance.new("ScreenGui")
+
+gui.Name = "Shit.dick"
+
+gui.ResetOnSpawn = false
+
+pcall(function()
+
+    gui.Parent = CoreGui
+
+end)
+
+if not gui.Parent then
+
+    gui.Parent = player:WaitForChild("PlayerGui")
+
+end
+
+-- ===== MAIN FRAME =====
+
+local mainFrame = Instance.new("Frame")
+
+mainFrame.Size = UDim2.new(0, 180, 0, 60)
+
+mainFrame.Position = UDim2.new(0.5, -90, 0.5, -30)
+
+mainFrame.BackgroundColor3 = COLORS.DarkPurple
+
+mainFrame.BorderSizePixel = 0
+
+mainFrame.Active = true
+
+mainFrame.Draggable = true
+
+mainFrame.Parent = gui
+
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
+
+-- Gradient for premium look
+
+local gradient = Instance.new("UIGradient", mainFrame)
+
+gradient.Color = ColorSequence.new{
+
+    ColorSequenceKeypoint.new(0, COLORS.Pink),
+
+    ColorSequenceKeypoint.new(1, COLORS.Purple)
+
+}
+
+gradient.Rotation = 45
+
+-- ===== ACTIVATE BUTTON =====
+
+local activateBtn = Instance.new("TextButton")
+
+activateBtn.Size = UDim2.new(0.8, 0, 0, 40)
+
+activateBtn.Position = UDim2.new(0.1, 0, 0, 10)
+
+activateBtn.BackgroundColor3 = COLORS.Pink
+
+activateBtn.BorderSizePixel = 0
+
+activateBtn.Font = Enum.Font.GothamBold
+
+activateBtn.TextSize = 16
+
+activateBtn.TextColor3 = COLORS.White
+
+activateBtn.Text = "ACTIVATE"
+
+activateBtn.AutoButtonColor = false
+
+activateBtn.Parent = mainFrame
+
+Instance.new("UICorner", activateBtn).CornerRadius = UDim.new(0, 8)
+
+-- Button hover effect
+
+activateBtn.MouseEnter:Connect(function()
+
+    activateBtn.BackgroundColor3 = COLORS.Purple
+
+end)
+
+activateBtn.MouseLeave:Connect(function()
+
+    activateBtn.BackgroundColor3 = COLORS.Pink
+
+end)
+
+-- ===== HOOK STATE =====
+
+local isActive = false
+
+activateBtn.MouseButton1Click:Connect(function()
+
+    isActive = not isActive
+
+    activateBtn.Text = isActive and "DEACTIVATE" or "ACTIVATE"
+
+end)
+
+-- ===== FLASH TELEPORT FUNCTION =====
+
+local function equipFlashTeleport()
+
+    local character = player.Character or player.CharacterAdded:Wait()
+
+    local tool = player.Backpack:FindFirstChild("Flash Teleport") 
+
+                or character:FindFirstChild("Flash Teleport")
+
+    if tool then
+
+        tool.Parent = character
+
+        tool:Activate()
+
+    end
+
+end
+
+-- ===== HOOK PROXIMITY PROMPTS =====
+
+local function hookPrompt(prompt)
+
+    if not prompt:IsA("ProximityPrompt") then return end
+
+    if prompt.ActionText ~= "Steal" then return end
+
+    if prompt:GetAttribute("FlashHooked") then return end
+
+    prompt:SetAttribute("FlashHooked", true)
+
+    prompt.Triggered:Connect(function(plr)
+
+        if plr == player and isActive then
+
+            equipFlashTeleport()
+
+        end
+
+    end)
+
+end
+
+-- Hook existing prompts
+
+for _, prompt in ipairs(game:GetDescendants()) do
+
+    hookPrompt(prompt)
+
+end
+
+-- Hook new prompts dynamically
+
+game.DescendantAdded:Connect(hookPrompt)
+
+print("ben")
